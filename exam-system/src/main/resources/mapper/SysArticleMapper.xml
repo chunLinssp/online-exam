@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jomn.mapper.SysArticleMapper">
+
+	<resultMap id="ArticleMap" type="com.jomn.domain.Article">
+		<id property="id" column="id" />
+		<result property="commentCounts" column="comment_counts" />
+		<result property="status" column="status" />
+		<result property="createTime" column="create_time" />
+		<result property="summary" column="summary" />
+		<result property="title" column="title" />
+		<result property="viewCounts" column="view_counts" />
+		<result property="weight" column="weight" />
+		<association property="articleBody" column="body_id"
+					select="com.jomn.mapper.SysArticleBodyMapper.selectArticleBodyById" />
+		<association property="sysUser" column="user_id"
+					select="com.jomn.mapper.SysUserMapper.selectUserById"/>
+		<association property="articleCategory" column="category_id"
+					select="com.jomn.mapper.SysArticleCategoryMapper.selectArticleCategoryById"/>
+	</resultMap>
+	
+	<resultMap id="ArticleBodyMap" type="com.jomn.domain.ArticleBody">
+		<id property="id" column="id" />
+		<result property="content" column="content" />
+		<result property="contentHtml" column="content_html" />
+	</resultMap>
+
+	<insert id="insertArticle" keyProperty="id" useGeneratedKeys="true">
+		insert into me_article(
+			comment_counts,
+			status,
+			create_time,
+			summary,
+			title,
+			view_counts,
+			weight,
+			user_id,
+			body_id,
+			category_id
+		)values(
+			#{commentCounts},
+			#{status},
+			#{createTime},
+			#{summary},
+			#{title},
+			#{viewCounts},
+			#{weight},
+		<if test="sysUser!=null">
+			<if test="sysUser.userId != null">
+				#{sysUser.userId},
+			</if>
+		</if>
+		<if test="articleBody != null">
+			<if test="articleBody.id != null">
+				#{articleBody.id},
+			</if>
+		</if>
+		<if test="articleCategory != null">
+			<if test="articleCategory.id != null">
+				#{articleCategory.id}
+			</if>
+		</if>
+		)
+	</insert>
+
+
+	<update id="updateArticleStatusById">
+		update me_article
+		<trim prefix="set" suffixOverrides=",">
+			<if test="commentCounts != null">
+				comment_counts = #{commentCounts},
+			</if>
+			<if test="status != null">
+				status = #{status},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime},
+			</if>
+			<if test="summary != null">
+				summary = #{summary},
+			</if>
+			<if test="title != null">
+				title = #{title},
+			</if>
+			<if test="viewCounts != null">
+				viewCounts = #{viewCounts},
+			</if>
+			<if test="userId != null">
+				user_id = #{userId},
+			</if>
+			<if test="bodyId != null">
+				bodyId = #{bodyId},
+			</if>
+			<if test="categoryId != null">
+				category_id = #{categoryId},
+			</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="delteArticleByIds">
+		delete from me_article where id in
+		<foreach collection="array" item="articleId" open="(" close=")"  separator=",">
+			#{articleId}
+		</foreach>
+	</delete>
+
+	<select id="selectArticleListById" resultMap="ArticleMap">
+		select * from me_article where user_id = #{useId}
+	</select>
+
+	<select id="selectArticleList" resultMap="ArticleMap">
+		select * from me_article
+		<where>
+		 	1 = 1
+			<if test="commentCounts != null">
+			AND	comment_counts = #{commentCounts},
+			</if>
+			<if test="status != null">
+			AND	status = #{status},
+			</if>
+			<if test="createTime != null">
+			AND	create_time = #{createTime},
+			</if>
+			<if test="summary != null">
+			AND	summary = #{summary},
+			</if>
+			<if test="title != null">
+			AND	title = #{title},
+			</if>
+			<if test="viewCounts != null">
+			AND	viewCounts = #{viewCounts}
+			</if>
+			<if test="id != null and id != ''">
+			AND id = #{id}
+			</if>
+			<if test="articleCategory != null">
+				<if test="articleCategory.id != null and articleCategory.id != ''">
+					AND category_id = #{articleCategory.id}
+				</if>
+			</if>
+		</where>
+	</select>
+
+	<select id="selectArticleListByUid" resultMap="ArticleMap">
+		select * from me_article where user_id = #{id}
+	</select>
+
+	<select id="selectArticleAllList" resultMap="ArticleMap">
+		SELECT
+			ma.id,
+			ma.comment_counts,
+			ma.status,
+			ma.create_time,
+			ma.summary,
+			ma.title,
+			ma.view_counts,
+			ma.weight,
+			ma.user_id,
+			ma.body_id,
+			ma.category_id
+		FROM
+			me_article ma,
+			me_category mc,
+			me_category_tag mct,
+			me_tag mt
+		<where>
+			ma.category_id = mc.id
+			AND mc.id = mct.category_id
+			AND mct.tag_id = mt.id
+			<if test="articleCategory.id != null and articleCategory.id != ''">
+			AND	mc.id = #{articleCategory.id}
+			</if>
+			<if test="articleTag.id != null and articleTag.id !=''">
+			AND mt.id = #{articleTag.id}
+			</if>
+		</where>
+		GROUP BY
+			ma.id
+	</select>
+
+	<select id="selectArticleByTagId" resultMap="ArticleMap">
+		SELECT
+			*
+		FROM
+			me_article ma
+		WHERE
+			ma.category_id IN (
+				SELECT
+					category_id
+				FROM
+					me_category_tag mct
+				WHERE
+					mct.tag_id = #{id}
+			)
+	</select>
+
+
+</mapper>

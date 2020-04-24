@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jomn.mapper.SysMenuMapper">
+
+	<resultMap id="roleMap" type="com.jomn.domain.SysMenu">
+		<id property="menuId" column="menu_id" />
+		<result property="orderNum" column="order_num" />
+		<result property="remark" column="remark" />
+		<result property="menuName" column="menu_name" />
+		<result property="parentId" column="parent_id" />
+		<result property="url" column="url" />
+		<result property="target" column="target" />
+		<result property="menuType" column="menu_type" />
+		<result property="visible" column="visible" />
+		<result property="perms" column="perms" />
+		<result property="icon" column="icon" />
+		<result property="createBy" column="create_by" />
+		<result property="createTime" column="create_time" />
+		<result property="updateBy" column="update_by" />
+		<result property="updateTime" column="update_time" />
+	</resultMap>
+
+	<insert id="insertMenu">
+		insert into sys_menu(
+			menu_name,
+			parent_id,
+			order_num,
+			url,
+			target,
+			menu_type,
+			visible,
+			perms,
+			icon,
+			create_by,
+			create_time,
+			update_by,
+			update_time,
+			remark
+		)values(
+			#{menuNme},
+			#{parentId},
+			#{orderNum},
+			#{url},
+			#{target},
+			#{menuType},
+			#{visible},
+			#{perms},
+			#{icon},
+			#{createBy},
+			#{createTime},
+			#{updateBy},
+			#{updateTime},
+			#{remark}
+		)
+	</insert>
+
+
+	<update id="updateMenuById">
+		update sys_menu
+		<trim prefix="set" suffixOverrides=",">
+			<if test="menuName != null and menuName != ''">
+				menu_name = #{menuName},
+			</if>
+			<if test="parentId != null and parentId != ''">
+				parent_id = #{parentId},
+			</if>
+			<if test="orderNum != null and orderNum != ''">
+				order_num = #{orderNum},
+			</if>
+			<if test="url != null and url != ''">
+				url = #{url},
+			</if>
+			<if test="target != null and target != ''">
+				target = #{target},
+			</if>
+			<if test="menuType != null and menuType != ''">
+				menu_type = #{menuType},
+			</if>
+			<if test="visible != null and visible != ''">
+				visible = #{visible},
+			</if>
+			<if test="perms != null and perms != ''">
+				perms = #{perms},
+			</if>
+			<if test="icon != null and icon != ''">
+				icon = #{icon},
+			</if>
+			<if test="createBy != null and createBy != ''">
+				create_by = #{createBy},
+			</if>
+			<if test="createTime != null and createTime != ''">
+				create_time = #{createTime},
+			</if>
+			<if test="updateBy != null and updateBy != ''">
+				update_by = #{updateBy},
+			</if>
+			<if test="updateTime != null and updateTime != ''">
+				update_time = #{updateTime},
+			</if>
+			<if test="remark != null and remark != ''">
+				remark = #{remark},
+			</if>
+		</trim>
+		where menu_id = #{menuId}
+	</update>
+
+	<delete id="delteMenuById">
+		delete from sys_menu where
+		menu_id = #{menuId}
+	</delete>
+
+	<select id="selectMenuList" resultMap="roleMap">
+		select * from sys_menu
+		<where>
+			1 = 1
+			<if test="menuName != null and menuName != ''">
+			AND	menu_name = #{menuName},
+			</if>
+			<if test="parentId != null and parentId != ''">
+			AND		parent_id = #{parentId},
+			</if>
+			<if test="orderNum != null and orderNum != ''">
+			AND		order_num = #{orderNum},
+			</if>
+			<if test="url != null and url != ''">
+				AND		url = #{url},
+			</if>
+			<if test="target != null and target != ''">
+				AND		target = #{target},
+			</if>
+			<if test="menuType != null and menuType != ''">
+				AND		menu_type = #{menuType},
+			</if>
+			<if test="visible != null and visible != ''">
+				AND		visible = #{visible},
+			</if>
+			<if test="perms != null and perms != ''">
+				AND		perms = #{perms},
+			</if>
+			<if test="icon != null and icon != ''">
+				AND		icon = #{icon},
+			</if>
+			<if test="createBy != null and createBy != ''">
+				AND		create_by = #{createBy},
+			</if>
+			<if test="createTime != null and createTime != ''">
+				AND		create_time = #{createTime},
+			</if>
+			<if test="updateBy != null and updateBy != ''">
+				AND		update_by = #{updateBy},
+			</if>
+			<if test="updateTime != null and updateTime != ''">
+				AND		update_time = #{updateTime},
+			</if>
+			<if test="remark != null and remark != ''">
+				AND		remark = #{remark}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectMenuListByRoleId" resultMap="roleMap">
+		SELECT
+			*
+		FROM
+			sys_menu
+		WHERE
+		menu_id IN (
+		SELECT
+			menu_id
+		FROM
+			sys_role_menu
+		WHERE
+			role_id = #{roleId}
+		)
+	</select>
+</mapper>

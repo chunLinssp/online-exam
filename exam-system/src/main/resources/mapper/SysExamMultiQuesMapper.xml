@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jomn.mapper.SysExamMultiQuesMapper">
+
+
+
+
+
+	<update id="updateMultiQuesById">
+		update exam_multi_question
+		<trim prefix="set" suffixOverrides=",">
+			<if test="subject!=null and subject!=''">
+				subject = #{subject},
+			</if>
+			<if test="question!=null and question!=''">
+				question = #{question},
+			</if>
+			<if test="answerA!=null and answerA!=''">
+				answerA = #{answerA},
+			</if>
+			<if test="answerB!=null and answerB!=''">
+				answerB = #{answerB},
+			</if>
+			<if test="answerC!=null and answerC!=''">
+				answerC = #{answerC},
+			</if>
+			<if test="answerD!=null and answerD!=''">
+				answerD = #{answerD},
+			</if>
+			<if test="rightAnswer!=null and rightAnswer!=''">
+				right_answer = #{rightAnswer},
+			</if>
+			<if test="analysis!=null and analysis!=''">
+				analysis = #{analysis},
+			</if>
+			<if test="score!=null and score!=''">
+				score = #{score},
+			</if>
+			<if test="section!=null and section!=''">
+				`section` = #{section},
+			</if>
+			<if test="level!=null and level!=''">
+				`level` = #{level},
+			</if>
+		</trim>
+		where question_id = #{questionId}
+	</update>
+
+	<select id="selectMultiQuesList" resultType="com.jomn.domain.ExamMultiQues">
+		select * from exam_multi_question
+	</select>
+
+    <select id="selectMultiQuesListByIds" resultType="com.jomn.domain.ExamMultiQues">
+		select * from exam_multi_question where question_id in
+		<foreach collection="list" item="Id" separator="," open="(" close=")">
+			#{Id}
+		</foreach>
+	</select>
+
+
+    <insert id="insertMultiQues">
+		insert into exam_multi_question(
+			question_id,
+			subject,
+			question,
+			answerA,
+			answerB,
+			answerC,
+			answerD,
+			right_answer,
+			analysis,
+			score,
+			`section`,
+			`level`
+		)values(
+			#{questionId},
+			#{subject},
+			#{question},
+			#{answerA},
+			#{answerB},
+			#{answerC},
+			#{answerD},
+			#{rightAnswer},
+			#{analysis},
+			#{score},
+			#{section},
+			#{level}
+		)
+	</insert>
+
+
+</mapper>

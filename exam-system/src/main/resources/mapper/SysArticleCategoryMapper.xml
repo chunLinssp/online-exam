@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jomn.mapper.SysArticleCategoryMapper">
+
+	<resultMap id="CategoryMap" type="com.jomn.domain.ArticleCategory">
+		<id property="id" column="id"/>
+		<result property="avatar" column="avatar" />
+		<result property="categoryname" column="categoryname" />
+		<result property="description" column="description" />
+		<collection property="articleTag" column="id"
+				select="com.jomn.mapper.SysArticleTagMapper.selectArticleTagsByCategoryId"/>
+	</resultMap>
+
+
+	<update id="updateArticleCategoryById">
+		update me_category
+		<trim prefix="set" suffixOverrides=",">
+			<if test="avatar!=null and avatar != ''">
+				avatar = #{avatar},
+			</if>
+			<if test="categoryname!=null and categoryname != ''">
+				categoryname = #{categoryname},
+			</if>
+			<if test="description!=null and description != ''">
+				description = #{description},
+			</if>
+		</trim>
+		where id = #{id}
+	</update>
+	<delete id="delteArticleCategoryById">
+		delete from me_category where id = #{id}
+	</delete>
+	<delete id="delteArticleCategoryList">
+		delete from me_category where id in
+		<foreach collection="array" item="id" open="(" close=")" separator=",">
+			#{id}
+		</foreach>
+	</delete>
+
+	<select id="selectArticleCategoryById" resultMap="CategoryMap">
+		select * from me_category where id = #{id};
+	</select>
+
+	<select id="selectCategoryList" resultType="com.jomn.domain.ArticleCategory">
+		select * from me_category
+		<where>
+			1 = 1
+			<if test="id != null and id != ''">
+				AND id = #{id}
+			</if>
+			<if test="categoryname != null and categoryname!= ''">
+				AND categoryname = #{categoryname}
+			</if>
+		</where>
+	</select>
+
+	<insert id="insertArticleCategory">
+		insert into me_category(
+		avatar,
+		categoryname,
+		description
+		)values (
+			#{avatar},
+			#{categoryname},
+			#{description}
+		)
+	</insert>
+
+
+</mapper>

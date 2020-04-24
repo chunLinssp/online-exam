@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jomn.mapper.SysExamSubjectQuesMapper">
+
+	<resultMap id="SubjectMap" type="com.jomn.domain.ExamSubjectManager">
+		<id property="id" column="id"/>
+		<result property="description" column="description" />
+		<result property="source" column="source" />
+		<result property="paperId" column="paper_id" />
+		<result property="createTime" column="create_time" />
+		<result property="totalTime" column="total_time" />
+		<result property="grade" column="grade" />
+		<result property="term" column="term" />
+		<result property="major" column="major" />
+		<result property="institute" column="institute" />
+		<result property="totalSource" column="total_source" />
+		<result property="type" column="type" />
+		<result property="tips" column="tips" />
+		<result property="level" column="level" />
+	</resultMap>
+
+	<select id="selectSubjectList" resultMap="SubjectMap">
+		select DISTINCT em.paper_id,
+			em.id AS id,
+			em.description AS description,
+			em.source AS source,
+			em.create_time AS create_time,
+			em.total_time AS total_time,
+			em.grade AS grade,
+			em.term AS term,
+			em.major AS major,
+			em.institute AS institute,
+			em.total_source AS total_source,
+			em.type AS type,
+			em.tips AS tips,
+			em.level AS level,
+			epm.question_type AS questionType
+		from exam_manage em,exam_paper_manage epm
+		<where>
+			1 = 1
+			AND em.paper_id = epm.paper_id
+			<if test="source != null and source != ''">
+				AND em.source = #{source}
+			</if>
+			<if test="paperId != null and paperId != ''">
+				AND em.paper_id = #{paperId}
+			</if>
+			<if test="questionType != null">
+				AND epm.question_type = #{questionType}
+			</if>
+		</where>
+		 group by em.id
+	</select>
+
+	<select id="selectExamQuestionTempList" resultType="com.jomn.domain.ExamQuestionTemp">
+		select * from exam_paper_manage
+		<where>
+			1 = 1
+			<if test="paperId != null and paperId != ''">
+				AND paper_id = #{paperId}
+			</if>
+			<if test="questionType != null and questionType != ''">
+				AND question_type = #{questionType}
+			</if>
+		</where>
+	</select>
+
+
+
+
+</mapper>
