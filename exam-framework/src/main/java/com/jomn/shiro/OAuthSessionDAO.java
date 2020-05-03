@@ -17,6 +17,9 @@ import com.alibaba.fastjson.JSON;
 /**
  * 将session保存到redis
  *
+ * @author shimh
+ * <p>
+ * 2018年1月23日
  */
 public class OAuthSessionDAO extends CachingSessionDAO implements InitializingBean {
 

@@ -18,4 +18,9 @@ public class SystemConstant {
 
     public static final int MULTI_EXAM_CATEGORY = 1;
 
+    /** 菜单类型 **/
+    public static final String MAIN_MENU_TYPE = "M";
+
+    public static final String TWICE_MENU_TYPE = "C";
+
 }

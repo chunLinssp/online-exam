@@ -116,43 +116,43 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<where>
 			1 = 1
 			<if test="menuName != null and menuName != ''">
-			AND	menu_name = #{menuName},
+			AND	menu_name = #{menuName}
 			</if>
 			<if test="parentId != null and parentId != ''">
-			AND		parent_id = #{parentId},
+			AND		parent_id = #{parentId}
 			</if>
 			<if test="orderNum != null and orderNum != ''">
-			AND		order_num = #{orderNum},
+			AND		order_num = #{orderNum}
 			</if>
 			<if test="url != null and url != ''">
-				AND		url = #{url},
+				AND		url = #{url}
 			</if>
 			<if test="target != null and target != ''">
-				AND		target = #{target},
+				AND		target = #{target}
 			</if>
 			<if test="menuType != null and menuType != ''">
-				AND		menu_type = #{menuType},
+				AND		menu_type = #{menuType}
 			</if>
 			<if test="visible != null and visible != ''">
-				AND		visible = #{visible},
+				AND		visible = #{visible}
 			</if>
 			<if test="perms != null and perms != ''">
-				AND		perms = #{perms},
+				AND		perms = #{perms}
 			</if>
 			<if test="icon != null and icon != ''">
-				AND		icon = #{icon},
+				AND		icon = #{icon}
 			</if>
 			<if test="createBy != null and createBy != ''">
-				AND		create_by = #{createBy},
+				AND		create_by = #{createBy}
 			</if>
 			<if test="createTime != null and createTime != ''">
-				AND		create_time = #{createTime},
+				AND		create_time = #{createTime}
 			</if>
 			<if test="updateBy != null and updateBy != ''">
-				AND		update_by = #{updateBy},
+				AND		update_by = #{updateBy}
 			</if>
 			<if test="updateTime != null and updateTime != ''">
-				AND		update_time = #{updateTime},
+				AND		update_time = #{updateTime}
 			</if>
 			<if test="remark != null and remark != ''">
 				AND		remark = #{remark}

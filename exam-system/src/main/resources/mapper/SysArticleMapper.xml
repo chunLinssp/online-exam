@@ -67,37 +67,82 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
 	<update id="updateArticleStatusById">
-		update me_article
-		<trim prefix="set" suffixOverrides=",">
-			<if test="commentCounts != null">
-				comment_counts = #{commentCounts},
-			</if>
-			<if test="status != null">
-				status = #{status},
-			</if>
-			<if test="createTime != null">
-				create_time = #{createTime},
-			</if>
-			<if test="summary != null">
-				summary = #{summary},
-			</if>
-			<if test="title != null">
-				title = #{title},
-			</if>
-			<if test="viewCounts != null">
-				viewCounts = #{viewCounts},
-			</if>
-			<if test="userId != null">
-				user_id = #{userId},
-			</if>
-			<if test="bodyId != null">
-				bodyId = #{bodyId},
-			</if>
-			<if test="categoryId != null">
-				category_id = #{categoryId},
-			</if>
-		</trim>
-		where id = #{id}
+			update me_article
+			<trim prefix="set" suffixOverrides=",">
+				<trim prefix="comment_counts=case" suffix="end,">
+					<foreach collection="list" item="item" >
+						<if test="item.commentCounts != null">
+							when id = #{item.id} then #{item.commentCounts}
+						</if>
+					</foreach>
+				</trim>
+			<trim prefix="status=case" suffix="end,">
+				<foreach collection="list" item="item" >
+					<if test="item.status != null">
+						when id = #{item.id} then #{item.status}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="create_time=case" suffix="end,">
+				<foreach collection="list" item="item" >
+					<if test="item.createTime != null">
+						when id = #{item.id} then #{item.createTime}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="summary=case" suffix="end,">
+				<foreach collection="list" item="item" >
+					<if test="item.summary != null">
+						when id = #{item.id} then #{item.summary}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="title=case" suffix="end,">
+				<foreach collection="list" item="item" >
+					<if test="item.title != null">
+						when id = #{item.id} then #{item.title}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="view_counts=case" suffix="end,">
+				<foreach collection="list" item="item" >
+					<if test="item.viewCounts != null">
+						when id = #{item.id} then #{item.viewCounts}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="user_id=case" suffix="end,">
+				<foreach collection="list" item="item" >
+					<if test="item.sysUser != null">
+						<if test="item.sysUser.userId != null">
+							when id = #{item.id} then #{item.sysUser.userId}
+						</if>
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="body_id=case" suffix="end,">
+				<foreach collection="list" item="item" >
+					<if test="item.articleBody != null">
+						<if test="item.articleBody.id != null">
+							when id = #{item.id} then #{item.articleBody.id}
+						</if>
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="category_id=case" suffix="end,">
+				<foreach collection="list" item="item" >
+					<if test="item.articleCategory != null">
+						<if test="item.articleCategory.id != null">
+							when id = #{item.id} then #{item.articleCategory.id}
+						</if>
+					</if>
+				</foreach>
+			</trim>
+			</trim>
+			where id in
+			<foreach collection="list" item="item" open="(" close=")" separator=",">
+				#{item.id}
+			</foreach>
 	</update>
 
 	<delete id="delteArticleByIds">
@@ -116,22 +161,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<where>
 		 	1 = 1
 			<if test="commentCounts != null">
-			AND	comment_counts = #{commentCounts},
+			AND	comment_counts = #{commentCounts}
 			</if>
 			<if test="status != null">
-			AND	status = #{status},
+			AND	status = #{status}
 			</if>
 			<if test="createTime != null">
-			AND	create_time = #{createTime},
+			AND	create_time = #{createTime}
 			</if>
 			<if test="summary != null">
-			AND	summary = #{summary},
+			AND	summary = #{summary}
 			</if>
 			<if test="title != null">
-			AND	title = #{title},
+			AND	title = #{title}
 			</if>
 			<if test="viewCounts != null">
-			AND	viewCounts = #{viewCounts}
+			AND	view_counts = #{viewCounts}
 			</if>
 			<if test="id != null and id != ''">
 			AND id = #{id}

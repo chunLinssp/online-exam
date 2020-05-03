@@ -27,7 +27,7 @@ public class SysArticleServiceImpl implements SysArticleService {
 
 
     @Override
-    public void updateArticleStatusById(Article article) {
+    public void updateArticleStatusById(List<Article> article) {
         sysArticleMapper.updateArticleStatusById(article);
     }
 

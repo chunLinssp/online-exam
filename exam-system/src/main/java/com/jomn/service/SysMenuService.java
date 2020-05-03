@@ -22,11 +22,14 @@ public interface SysMenuService {
     public void delteMenuById(Long menuId);
 
     /**
-     * 查询所有菜单
+     * 查询所有菜单 加载父子节点
      */
     public List<SysMenu> selectMenuList(SysMenu sysMenu);
 
-
+    /**
+     * 查询所有菜单
+     */
+    public List<SysMenu> selectMenuListByCondition(SysMenu sysMenu);
 
 
 }

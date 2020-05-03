@@ -11,7 +11,7 @@ public interface SysArticleService {
     /**
      * 审批文章
      */
-    public void updateArticleStatusById(Article article);
+    public void updateArticleStatusById(List<Article> article);
 
     /**
      * 批量删除文章

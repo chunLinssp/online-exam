@@ -15,7 +15,9 @@ import com.jomn.service.SysArticleService;
 import com.jomn.service.SysArticleTagService;
 import com.jomn.web.core.vo.ArticleTableVo;
 import com.jomn.web.core.vo.ArticleVo;
+import com.jomn.web.core.vo.PageVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,15 +35,15 @@ public class SysArticleController extends BaseController{
     @Autowired
     SysArticleBodyService sysArticleBodyService;
 
-    @RequestMapping("/system/article")
+    @RequestMapping(value = "/system/article",method = {RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
     @FastJsonView(
             exclude = {
                 @FastJsonFilter(clazz = SysUser.class,props = {"roleId","loginName","phonenumber","password","salt","status","delFlag","loginIp","loginDate","userType","roleIds","roles"}),
-                @FastJsonFilter(clazz = Article.class,props = {"status","weight"})
+                @FastJsonFilter(clazz = Article.class,props = {"weight"})
             }
     )
-    public Result articleView(PageDomain pageDomain, String categoryId , Article article) {
+    public PageVo articleView(PageDomain pageDomain, String categoryId ,@RequestBody(required = false) Article article) {
         if(categoryId != null) {
             ArticleCategory articleCategory = new ArticleCategory();
             articleCategory.setId(Integer.parseInt(categoryId));
@@ -49,23 +51,32 @@ public class SysArticleController extends BaseController{
         }
         startPage(pageDomain);
         List<Article> articles = sysArticleService.selectArticleList(article);
-        Result success = ResultHandle.success(articles);
-        return success;
+        PageVo pageVo = getPageVo(articles);
+        return pageVo;
+
     }
 
 
-    @PostMapping("/system/article/edit")
-    @ResponseBody
-    public Result editMenu(Article article) {
-        sysArticleService.updateArticleStatusById(article);
-        return ResultHandle.success();
-    }
+//    @PostMapping("/system/article/edit")
+//    @ResponseBody
+//    public Result editMenu(Article article) {
+//        sysArticleService.updateArticleStatusById(article);
+//        return ResultHandle.success();
+//    }
 
     @GetMapping("/system/UserArticleView")
     @ResponseBody
     public Result UserArticleView(String id) {
         List<Article> articles = sysArticleService.selectArticleListByUid(Long.parseLong(id));
         Result success = ResultHandle.success(articles);
+        return success;
+    }
+
+    @PostMapping("/system/updateArticle")
+    @ResponseBody
+    public Result updateArticle(@RequestBody List<Article> article) {
+        sysArticleService.updateArticleStatusById(article);
+        Result success = ResultHandle.success();
         return success;
     }
 

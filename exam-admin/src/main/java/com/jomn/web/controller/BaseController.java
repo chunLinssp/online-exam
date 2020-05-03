@@ -8,6 +8,7 @@ import com.jomn.core.page.TableDataInfo;
 import com.jomn.core.page.TableSupper;
 import com.jomn.utlis.ServletUtlis;
 import com.jomn.utlis.StringUtils;
+import com.jomn.web.core.vo.PageVo;
 
 import java.util.List;
 
@@ -33,24 +34,27 @@ public class BaseController {
      * 请求分页
      */
     protected void startPage(PageDomain pageDomain) {
-        Integer pageNum = pageDomain.getPageNum();
-        Integer pageSize = pageDomain.getPageSize();
-        String sort = pageDomain.getOrderByColumn();
-        if(sort != null && sort.trim() != "") {
-            String sortOrder = pageDomain.getIsAsc();
-            sort = StringUtils.toUnderScoreCase(sort);
-            String orderByColumn = sort + " " + sortOrder;
-            pageDomain.setOrderByColumn(orderByColumn);
-        }else {
-            pageDomain.setOrderByColumn(null);
-        }
-        if(StringUtils.isNotNull(pageNum) && StringUtils.isNotNull(pageSize)) {
-            if(StringUtils.isNotNull(pageDomain.getOrderByColumn())) {
-                PageHelper.startPage(pageNum,pageSize,pageDomain.getOrderByColumn());
+        if(pageDomain != null) {
+            Integer pageNum = pageDomain.getPageNum();
+            Integer pageSize = pageDomain.getPageSize();
+            String sort = pageDomain.getOrderByColumn();
+            if(sort != null && sort.trim() != "") {
+                String sortOrder = pageDomain.getIsAsc();
+                sort = StringUtils.toUnderScoreCase(sort);
+                String orderByColumn = sort + " " + sortOrder;
+                pageDomain.setOrderByColumn(orderByColumn);
             }else {
-                PageHelper.startPage(pageNum,pageSize);
+                pageDomain.setOrderByColumn(null);
+            }
+            if(StringUtils.isNotNull(pageNum) && StringUtils.isNotNull(pageSize)) {
+                if(StringUtils.isNotNull(pageDomain.getOrderByColumn())) {
+                    PageHelper.startPage(pageNum,pageSize,pageDomain.getOrderByColumn());
+                }else {
+                    PageHelper.startPage(pageNum,pageSize);
+                }
             }
         }
+
     }
 
 
@@ -70,6 +74,16 @@ public class BaseController {
         return tableDataInfo;
     }
 
+    /**
+     * 封装pageVo
+     */
+    public PageVo getPageVo(List<?> data) {
+        PageVo pageVo = new PageVo();
+        pageVo.setTotal(new PageInfo(data).getTotal());
+        pageVo.setData(data);
+        pageVo.setResultCode(ResultCode.SUCCESS);
+        return pageVo;
+    }
 
 
 
