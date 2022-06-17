@@ -27,7 +27,7 @@
         <pagehelper.boot.version>1.2.5</pagehelper.boot.version>
         <poi.version>3.17</poi.version>
         <commons.io.version>2.5</commons.io.version>
-        <fastjson.version>1.2.60</fastjson.version>
+        <fastjson.version>1.2.83</fastjson.version>
         <jwt.version>3.2.0</jwt.version>
     </properties>
 
